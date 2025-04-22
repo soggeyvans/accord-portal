@@ -174,7 +174,7 @@ export default function DashboardLayout({
       >
         <div className="h-16 flex items-center justify-center border-b border-gray-200">
           <Link href="/dashboard" className="flex items-center">
-            <div className="relative h-12 w-48">
+            <div className="relative h-12 w-48 ml-4">
               <Image
                 src="/accord-logo.png"
                 alt="Accord Plastics"
