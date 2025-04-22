@@ -1,4 +1,4 @@
-// No imports needed for current functionality
+'use client';
 
 const renderCompanyDocs = () => {
   return (
@@ -33,4 +33,10 @@ const renderCompanyDocs = () => {
   );
 };
 
-// ... existing code ...
+export default function ProfilePage() {
+  return (
+    <div className="container mx-auto px-4 py-8">
+      {renderCompanyDocs()}
+    </div>
+  );
+}
