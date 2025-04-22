@@ -83,7 +83,10 @@ export default function ProfilePage() {
 
     return (
       <div className="relative group">
-        <div className="relative w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden bg-gray-100 border-4 border-gray-50 flex-shrink-0">
+        <button
+          onClick={() => fileInputRef.current?.click()}
+          className="relative w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden bg-gray-100 border-4 border-gray-50 flex-shrink-0 focus:outline-none focus:ring-2 focus:ring-[#002B5C] focus:ring-offset-2 transition-all duration-200"
+        >
           {currentImage ? (
             <Image
               src={currentImage}
@@ -98,27 +101,25 @@ export default function ProfilePage() {
               </svg>
             </div>
           )}
-        </div>
-
-        {/* Upload Button */}
-        <button
-          onClick={() => fileInputRef.current?.click()}
-          className="absolute bottom-0 right-0 bg-blue-600 text-white p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
-        >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-          </svg>
+          
+          {/* Mobile-friendly edit overlay */}
+          <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity duration-200">
+            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </div>
         </button>
 
-        {/* Remove Button */}
+        {/* Remove Button - Made larger for touch */}
         {employeeData.profilePicture !== '/images/default-avatar.png' && (
           <button
             onClick={handleImageRemove}
-            className="absolute top-0 right-0 bg-red-600 text-white p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
+            className="absolute -top-2 -right-2 bg-red-600 text-white p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-all duration-200 md:w-8 md:h-8 w-10 h-10 touch-manipulation"
+            aria-label="Remove profile picture"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            <svg className="w-4 h-4 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
             </svg>
           </button>
         )}
@@ -130,6 +131,7 @@ export default function ProfilePage() {
           className="hidden"
           accept="image/*"
           onChange={handleImageUpload}
+          capture="user"
         />
       </div>
     );
@@ -170,32 +172,36 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {/* Image Upload Preview Modal */}
+        {/* Image Upload Preview Modal - Made responsive */}
         {imagePreview && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-lg p-6 max-w-md w-full">
-              <h3 className="text-lg font-semibold mb-4">Preview New Profile Picture</h3>
-              <div className="relative w-48 h-48 mx-auto rounded-full overflow-hidden mb-4">
-                <Image
-                  src={imagePreview}
-                  alt="Preview"
-                  fill
-                  className="object-cover"
-                />
+          <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-lg w-full max-w-sm md:max-w-md mx-4 overflow-hidden">
+              <div className="p-4 border-b border-gray-200">
+                <h3 className="text-lg font-semibold text-gray-900">Preview New Profile Picture</h3>
               </div>
-              <div className="flex justify-end gap-3">
-                <button
-                  onClick={handleImageCancel}
-                  className="px-4 py-2 text-gray-600 hover:text-gray-800"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleImageSave}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-                >
-                  Save
-                </button>
+              <div className="p-4">
+                <div className="relative w-48 h-48 mx-auto rounded-full overflow-hidden mb-4">
+                  <Image
+                    src={imagePreview}
+                    alt="Preview"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <div className="flex flex-col sm:flex-row justify-end gap-3">
+                  <button
+                    onClick={handleImageCancel}
+                    className="w-full sm:w-auto px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleImageSave}
+                    className="w-full sm:w-auto px-4 py-2 bg-[#002B5C] text-white rounded-lg hover:bg-[#003872] transition-colors duration-200"
+                  >
+                    Save
+                  </button>
+                </div>
               </div>
             </div>
           </div>
