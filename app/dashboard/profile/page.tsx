@@ -1,6 +1,7 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useRef } from 'react';
+import Image from 'next/image';
 
 const mockEmployeeData = {
   id: 'EMP001',
@@ -12,6 +13,7 @@ const mockEmployeeData = {
   birthdate: 'Mar 10, 1990',
   status: 'Active',
   department: 'Production',
+  profilePicture: '/images/default-avatar.png', // Default profile picture
   emergencyContact: {
     name: 'Jane Doe',
     relationship: 'Spouse',
@@ -21,6 +23,118 @@ const mockEmployeeData = {
 };
 
 export default function ProfilePage() {
+  const [employeeData, setEmployeeData] = useState(mockEmployeeData);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [isImageUploading, setIsImageUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      alert('Please upload an image file');
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('File size should be less than 5MB');
+      return;
+    }
+
+    setIsImageUploading(true);
+
+    // Create preview URL
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview(reader.result as string);
+      setIsImageUploading(false);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleImageSave = () => {
+    if (imagePreview) {
+      // In a real application, you would upload the image to your server here
+      setEmployeeData(prev => ({
+        ...prev,
+        profilePicture: imagePreview
+      }));
+      setImagePreview(null);
+    }
+  };
+
+  const handleImageRemove = () => {
+    setEmployeeData(prev => ({
+      ...prev,
+      profilePicture: '/images/default-avatar.png'
+    }));
+    setImagePreview(null);
+  };
+
+  const handleImageCancel = () => {
+    setImagePreview(null);
+  };
+
+  const renderProfilePicture = () => {
+    const currentImage = imagePreview || employeeData.profilePicture;
+
+    return (
+      <div className="relative group">
+        <div className="relative w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden bg-gray-100 border-4 border-gray-50 flex-shrink-0">
+          {currentImage ? (
+            <Image
+              src={currentImage}
+              alt="Profile"
+              fill
+              className="object-cover"
+            />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center text-gray-400">
+              <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+            </div>
+          )}
+        </div>
+
+        {/* Upload Button */}
+        <button
+          onClick={() => fileInputRef.current?.click()}
+          className="absolute bottom-0 right-0 bg-blue-600 text-white p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+        </button>
+
+        {/* Remove Button */}
+        {employeeData.profilePicture !== '/images/default-avatar.png' && (
+          <button
+            onClick={handleImageRemove}
+            className="absolute top-0 right-0 bg-red-600 text-white p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+          </button>
+        )}
+
+        {/* Hidden File Input */}
+        <input
+          type="file"
+          ref={fileInputRef}
+          className="hidden"
+          accept="image/*"
+          onChange={handleImageUpload}
+        />
+      </div>
+    );
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Employee Info Card */}
@@ -28,39 +142,64 @@ export default function ProfilePage() {
         <div className="p-6">
           <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
             {/* Profile Photo */}
-            <div className="relative w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden bg-gray-100 border-4 border-gray-50 flex-shrink-0">
-              <div className="absolute inset-0 flex items-center justify-center text-gray-400">
-                <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                </svg>
-              </div>
-            </div>
+            {renderProfilePicture()}
 
             {/* Basic Info */}
             <div className="flex-1">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
-                  <h1 className="text-2xl font-bold text-gray-900">{mockEmployeeData.name}</h1>
-                  <p className="text-lg text-gray-600">{mockEmployeeData.jobTitle}</p>
+                  <h1 className="text-2xl font-bold text-gray-900">{employeeData.name}</h1>
+                  <p className="text-lg text-gray-600">{employeeData.jobTitle}</p>
                 </div>
                 <div className="flex items-center">
                   <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                    mockEmployeeData.status === 'Active' 
+                    employeeData.status === 'Active' 
                       ? 'bg-green-100 text-green-800' 
                       : 'bg-gray-100 text-gray-800'
                   }`}>
                     <span className={`w-2 h-2 rounded-full mr-2 ${
-                      mockEmployeeData.status === 'Active' 
+                      employeeData.status === 'Active' 
                         ? 'bg-green-400' 
                         : 'bg-gray-400'
                     }`}></span>
-                    {mockEmployeeData.status}
+                    {employeeData.status}
                   </span>
                 </div>
               </div>
             </div>
           </div>
         </div>
+
+        {/* Image Upload Preview Modal */}
+        {imagePreview && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-lg p-6 max-w-md w-full">
+              <h3 className="text-lg font-semibold mb-4">Preview New Profile Picture</h3>
+              <div className="relative w-48 h-48 mx-auto rounded-full overflow-hidden mb-4">
+                <Image
+                  src={imagePreview}
+                  alt="Preview"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <div className="flex justify-end gap-3">
+                <button
+                  onClick={handleImageCancel}
+                  className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleImageSave}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                >
+                  Save
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Detailed Info Grid */}
         <div className="border-t border-gray-100 px-6 py-5 bg-gray-50">
@@ -74,7 +213,7 @@ export default function ProfilePage() {
               </div>
               <div>
                 <p className="text-sm font-medium text-gray-500">Email</p>
-                <p className="text-sm text-gray-900">{mockEmployeeData.email}</p>
+                <p className="text-sm text-gray-900">{employeeData.email}</p>
               </div>
             </div>
 
@@ -87,7 +226,7 @@ export default function ProfilePage() {
               </div>
               <div>
                 <p className="text-sm font-medium text-gray-500">Operator Code</p>
-                <p className="text-sm text-gray-900">{mockEmployeeData.operatorCode}</p>
+                <p className="text-sm text-gray-900">{employeeData.operatorCode}</p>
               </div>
             </div>
 
@@ -100,7 +239,7 @@ export default function ProfilePage() {
               </div>
               <div>
                 <p className="text-sm font-medium text-gray-500">Department</p>
-                <p className="text-sm text-gray-900">{mockEmployeeData.department}</p>
+                <p className="text-sm text-gray-900">{employeeData.department}</p>
               </div>
             </div>
 
@@ -113,7 +252,7 @@ export default function ProfilePage() {
               </div>
               <div>
                 <p className="text-sm font-medium text-gray-500">Start Date</p>
-                <p className="text-sm text-gray-900">{mockEmployeeData.startDate}</p>
+                <p className="text-sm text-gray-900">{employeeData.startDate}</p>
               </div>
             </div>
 
@@ -126,7 +265,7 @@ export default function ProfilePage() {
               </div>
               <div>
                 <p className="text-sm font-medium text-gray-500">Birth Date</p>
-                <p className="text-sm text-gray-900">{mockEmployeeData.birthdate}</p>
+                <p className="text-sm text-gray-900">{employeeData.birthdate}</p>
               </div>
             </div>
 
@@ -139,7 +278,7 @@ export default function ProfilePage() {
               </div>
               <div>
                 <p className="text-sm font-medium text-gray-500">Employee ID</p>
-                <p className="text-sm text-gray-900">{mockEmployeeData.id}</p>
+                <p className="text-sm text-gray-900">{employeeData.id}</p>
               </div>
             </div>
           </div>
@@ -158,8 +297,8 @@ export default function ProfilePage() {
             </div>
             <div>
               <p className="text-sm font-medium text-gray-500">Contact Name</p>
-              <p className="text-sm text-gray-900">{mockEmployeeData.emergencyContact.name}</p>
-              <p className="text-xs text-gray-500">{mockEmployeeData.emergencyContact.relationship}</p>
+              <p className="text-sm text-gray-900">{employeeData.emergencyContact.name}</p>
+              <p className="text-xs text-gray-500">{employeeData.emergencyContact.relationship}</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
@@ -170,8 +309,8 @@ export default function ProfilePage() {
             </div>
             <div>
               <p className="text-sm font-medium text-gray-500">Contact Numbers</p>
-              <p className="text-sm text-gray-900">{mockEmployeeData.emergencyContact.phone}</p>
-              <p className="text-xs text-gray-500">{mockEmployeeData.emergencyContact.alternatePhone}</p>
+              <p className="text-sm text-gray-900">{employeeData.emergencyContact.phone}</p>
+              <p className="text-xs text-gray-500">{employeeData.emergencyContact.alternatePhone}</p>
             </div>
           </div>
         </div>
