@@ -3,10 +3,15 @@
 import React from 'react';
 
 const mockEmployeeData = {
-  operatorCode: 'OP123',
+  id: 'EMP001',
   name: 'John Doe',
+  jobTitle: 'Machine Operator',
+  email: 'john.doe@company.com',
+  operatorCode: 'OP123',
   startDate: 'Jan 5, 2020',
   birthdate: 'Mar 10, 1990',
+  status: 'Active',
+  department: 'Production',
   emergencyContact: {
     name: 'Jane Doe',
     relationship: 'Spouse',
@@ -18,27 +23,155 @@ const mockEmployeeData = {
 export default function ProfilePage() {
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="bg-white rounded-lg shadow-sm p-6">
-        <h1 className="text-2xl font-bold mb-6">Employee Profile</h1>
-        
-        <div className="space-y-4">
-          <div>
-            <h2 className="text-lg font-semibold">Basic Information</h2>
-            <div className="mt-2">
-              <p><span className="font-medium">Name:</span> {mockEmployeeData.name}</p>
-              <p><span className="font-medium">Operator Code:</span> {mockEmployeeData.operatorCode}</p>
-              <p><span className="font-medium">Start Date:</span> {mockEmployeeData.startDate}</p>
-              <p><span className="font-medium">Birth Date:</span> {mockEmployeeData.birthdate}</p>
+      {/* Employee Info Card */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-8">
+        <div className="p-6">
+          <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
+            {/* Profile Photo */}
+            <div className="relative w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden bg-gray-100 border-4 border-gray-50 flex-shrink-0">
+              <div className="absolute inset-0 flex items-center justify-center text-gray-400">
+                <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+              </div>
+            </div>
+
+            {/* Basic Info */}
+            <div className="flex-1">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div>
+                  <h1 className="text-2xl font-bold text-gray-900">{mockEmployeeData.name}</h1>
+                  <p className="text-lg text-gray-600">{mockEmployeeData.jobTitle}</p>
+                </div>
+                <div className="flex items-center">
+                  <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                    mockEmployeeData.status === 'Active' 
+                      ? 'bg-green-100 text-green-800' 
+                      : 'bg-gray-100 text-gray-800'
+                  }`}>
+                    <span className={`w-2 h-2 rounded-full mr-2 ${
+                      mockEmployeeData.status === 'Active' 
+                        ? 'bg-green-400' 
+                        : 'bg-gray-400'
+                    }`}></span>
+                    {mockEmployeeData.status}
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
+        </div>
 
-          <div>
-            <h2 className="text-lg font-semibold">Emergency Contact</h2>
-            <div className="mt-2">
-              <p><span className="font-medium">Name:</span> {mockEmployeeData.emergencyContact.name}</p>
-              <p><span className="font-medium">Relationship:</span> {mockEmployeeData.emergencyContact.relationship}</p>
-              <p><span className="font-medium">Primary Phone:</span> {mockEmployeeData.emergencyContact.phone}</p>
-              <p><span className="font-medium">Alternative Phone:</span> {mockEmployeeData.emergencyContact.alternatePhone}</p>
+        {/* Detailed Info Grid */}
+        <div className="border-t border-gray-100 px-6 py-5 bg-gray-50">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Email */}
+            <div className="flex items-center gap-3">
+              <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center">
+                <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-500">Email</p>
+                <p className="text-sm text-gray-900">{mockEmployeeData.email}</p>
+              </div>
+            </div>
+
+            {/* Operator Code */}
+            <div className="flex items-center gap-3">
+              <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-purple-50 flex items-center justify-center">
+                <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-500">Operator Code</p>
+                <p className="text-sm text-gray-900">{mockEmployeeData.operatorCode}</p>
+              </div>
+            </div>
+
+            {/* Department */}
+            <div className="flex items-center gap-3">
+              <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-indigo-50 flex items-center justify-center">
+                <svg className="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-500">Department</p>
+                <p className="text-sm text-gray-900">{mockEmployeeData.department}</p>
+              </div>
+            </div>
+
+            {/* Start Date */}
+            <div className="flex items-center gap-3">
+              <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center">
+                <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-500">Start Date</p>
+                <p className="text-sm text-gray-900">{mockEmployeeData.startDate}</p>
+              </div>
+            </div>
+
+            {/* Birth Date */}
+            <div className="flex items-center gap-3">
+              <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-red-50 flex items-center justify-center">
+                <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 15.546c-.523 0-1.046.151-1.5.454a2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.704 2.704 0 01-3 0 2.704 2.704 0 00-3 0 2.701 2.701 0 00-1.5-.454M9 6v2m3-2v2m3-2v2M9 3h.01M12 3h.01M15 3h.01M21 21v-7a2 2 0 00-2-2H5a2 2 0 00-2 2v7h18zm-3-9v-2a2 2 0 00-2-2H8a2 2 0 00-2 2v2h12z" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-500">Birth Date</p>
+                <p className="text-sm text-gray-900">{mockEmployeeData.birthdate}</p>
+              </div>
+            </div>
+
+            {/* Employee ID */}
+            <div className="flex items-center gap-3">
+              <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-yellow-50 flex items-center justify-center">
+                <svg className="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5zm6-10.125a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zm1.294 6.336a6.721 6.721 0 01-3.17.789 6.721 6.721 0 01-3.168-.789 3.376 3.376 0 016.338 0z" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-500">Employee ID</p>
+                <p className="text-sm text-gray-900">{mockEmployeeData.id}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Emergency Contact Section */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-8">
+        <h2 className="text-lg font-semibold text-gray-900 mb-4">Emergency Contact</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="flex items-center gap-3">
+            <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-rose-50 flex items-center justify-center">
+              <svg className="w-5 h-5 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-gray-500">Contact Name</p>
+              <p className="text-sm text-gray-900">{mockEmployeeData.emergencyContact.name}</p>
+              <p className="text-xs text-gray-500">{mockEmployeeData.emergencyContact.relationship}</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-teal-50 flex items-center justify-center">
+              <svg className="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+              </svg>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-gray-500">Contact Numbers</p>
+              <p className="text-sm text-gray-900">{mockEmployeeData.emergencyContact.phone}</p>
+              <p className="text-xs text-gray-500">{mockEmployeeData.emergencyContact.alternatePhone}</p>
             </div>
           </div>
         </div>
