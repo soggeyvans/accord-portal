@@ -2,6 +2,7 @@
 
 import { useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 // Mock user database
 const USERS = {
@@ -41,9 +42,15 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg border border-gray-100">
         <div className="text-center">
-          {/* Placeholder logo - replace with actual logo */}
-          <div className="mx-auto w-16 h-16 mb-6 rounded-lg bg-[#002B5C] flex items-center justify-center">
-            <span className="text-white font-bold text-xl">AP</span>
+          {/* Logo */}
+          <div className="relative w-24 h-24 mx-auto mb-6 md:w-36 md:h-36">
+            <Image
+              src="/accord-logo.png"
+              alt="Accord Plastics"
+              fill
+              className="object-contain"
+              priority
+            />
           </div>
           <h2 className="text-3xl font-bold text-[#002B5C]">
             Welcome Back

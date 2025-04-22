@@ -3,6 +3,7 @@
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 interface NavItem {
   name: string;
@@ -172,12 +173,17 @@ export default function DashboardLayout({
         } md:translate-x-0`}
       >
         <div className="h-16 flex items-center justify-center border-b border-gray-200">
-          <div className="flex items-center">
-            <div className="w-8 h-8 rounded bg-[#002B5C] flex items-center justify-center">
-              <span className="text-white font-bold text-sm">AP</span>
+          <Link href="/dashboard" className="flex items-center">
+            <div className="relative h-10 w-auto ml-4">
+              <Image
+                src="/accord-logo.png"
+                alt="Accord Plastics"
+                fill
+                className="object-contain"
+                priority
+              />
             </div>
-            <span className="ml-2 text-lg font-semibold text-[#002B5C]">Accord Portal</span>
-          </div>
+          </Link>
         </div>
         <nav className="mt-6 px-4">
           {filteredNavigation.map((item) => {
